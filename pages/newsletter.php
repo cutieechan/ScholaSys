@@ -41,9 +41,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // SMTP settings – UPDATE WITH YOUR REAL CREDENTIALS
         $smtpHost = 'smtp.gmail.com';
         $smtpPort = 587;
-        $smtpUser = 'your SMTP user from gmail account';
-        $smtpPass = 'gqcz ueyg fdvs murf';   
-        $fromEmail = 'your SMTP email from gmail account';
+        $smtpUser = 'grefielkent@gmail.com';
+        $smtpPass = 'mkxm ttse dwtg zngr';   
+        $fromEmail = 'grefielkent@gmail.com';
         $fromName = 'ScholaSys Alumni';
         $mail = new PHPMailer(true);
         $mail->isSMTP();

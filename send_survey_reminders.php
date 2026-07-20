@@ -5,10 +5,11 @@ use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
 // SMTP settings – UPDATE WITH YOUR REAL CREDENTIALS
+$smtpHost = 'smtp.gmail.com';
 $smtpPort = 587;
-$smtpUser = 'your SMTP user from gmail account';
-$smtpPass = 'your smtmp app password';   
-$fromEmail = 'your SMTP email from gmail account';
+$smtpUser = 'grefielkent@gmail.com';
+$smtpPass = 'mkxm ttse dwtg zngr';   
+$fromEmail = 'grefielkent@gmail.com';
 $fromName = 'ScholaSys Alumni';
 
 

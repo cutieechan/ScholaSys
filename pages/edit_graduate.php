@@ -18,6 +18,7 @@ $success = '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $student_id = trim($_POST['student_id']);
     $first_name = trim($_POST['first_name']);
+    $middle_name = trim($_POST['middle_name']);
     $last_name = trim($_POST['last_name']);
     $email = trim($_POST['email']);
     $contact = trim($_POST['contact_number']);
@@ -25,13 +26,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $year = (int)$_POST['graduation_year'];
     $show_dir = isset($_POST['show_in_directory']) ? 1 : 0;
 
-    // Check duplicate student_id except current
     $checkStmt = $pdo->prepare("SELECT id FROM graduates WHERE student_id = ? AND id != ?");
     $checkStmt->execute([$student_id, $id]);
     if ($checkStmt->fetch()) {
         $error = "Student ID '$student_id' already used by another graduate.";
     } else {
-        // Handle file uploads
         $profile_image = $grad['profile_image'];
         if (isset($_FILES['profile_image']) && $_FILES['profile_image']['error'] === UPLOAD_ERR_OK) {
             $ext = pathinfo($_FILES['profile_image']['name'], PATHINFO_EXTENSION);
@@ -54,10 +53,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
         }
 
-        $update = $pdo->prepare("UPDATE graduates SET student_id=?, first_name=?, last_name=?, email=?, contact_number=?, program=?, graduation_year=?, profile_image=?, cv_path=?, show_in_directory=? WHERE id=?");
-        if ($update->execute([$student_id, $first_name, $last_name, $email, $contact, $program, $year, $profile_image, $cv_path, $show_dir, $id])) {
+        $update = $pdo->prepare("UPDATE graduates SET student_id=?, first_name=?, middle_name=?, last_name=?, email=?, contact_number=?, program=?, graduation_year=?, profile_image=?, cv_path=?, show_in_directory=? WHERE id=?");
+        if ($update->execute([$student_id, $first_name, $middle_name, $last_name, $email, $contact, $program, $year, $profile_image, $cv_path, $show_dir, $id])) {
             $success = "Graduate updated successfully!";
-            // Refresh grad data
             $stmt = $pdo->prepare("SELECT * FROM graduates WHERE id = ?");
             $stmt->execute([$id]);
             $grad = $stmt->fetch();
@@ -69,18 +67,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 include '../includes/header.php';
 ?>
-
-<style>
-    .profile-preview {
-        width: 120px;
-        height: 120px;
-        object-fit: cover;
-        border-radius: 50%;
-        border: 3px solid #fff;
-        box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-        margin-top: 10px;
-    }
-</style>
 
 <div class="card">
     <div class="card-header">
@@ -95,23 +81,27 @@ include '../includes/header.php';
         <?php endif; ?>
         <form method="post" enctype="multipart/form-data">
             <div class="row">
-                <div class="col-md-6 mb-3">
+                <div class="col-md-4 mb-3">
                     <label>Student ID</label>
                     <input type="text" name="student_id" class="form-control" value="<?= htmlspecialchars($grad['student_id']) ?>" required>
                 </div>
-                <div class="col-md-6 mb-3">
+                <div class="col-md-4 mb-3">
                     <label>First Name</label>
                     <input type="text" name="first_name" class="form-control" value="<?= htmlspecialchars($grad['first_name']) ?>" required>
                 </div>
-                <div class="col-md-6 mb-3">
+                <div class="col-md-4 mb-3">
+                    <label>Middle Name</label>
+                    <input type="text" name="middle_name" class="form-control" value="<?= htmlspecialchars($grad['middle_name']) ?>">
+                </div>
+                <div class="col-md-4 mb-3">
                     <label>Last Name</label>
                     <input type="text" name="last_name" class="form-control" value="<?= htmlspecialchars($grad['last_name']) ?>" required>
                 </div>
-                <div class="col-md-6 mb-3">
+                <div class="col-md-4 mb-3">
                     <label>Email</label>
                     <input type="email" name="email" class="form-control" value="<?= htmlspecialchars($grad['email']) ?>" required>
                 </div>
-                <div class="col-md-6 mb-3">
+                <div class="col-md-4 mb-3">
                     <label>Contact Number</label>
                     <input type="text" name="contact_number" class="form-control" value="<?= htmlspecialchars($grad['contact_number']) ?>">
                 </div>
@@ -127,18 +117,14 @@ include '../includes/header.php';
                     <label>Profile Picture</label>
                     <input type="file" name="profile_image" class="form-control" accept="image/*">
                     <?php if ($grad['profile_image']): ?>
-                        <div class="mt-2">
-                            <img src="/scholasys/assets/uploads/<?= $grad['profile_image'] ?>" class="profile-preview" alt="Profile Preview">
-                        </div>
+                        <img src="/scholasys/assets/uploads/<?= $grad['profile_image'] ?>" width="80" class="mt-2">
                     <?php endif; ?>
                 </div>
                 <div class="col-md-6 mb-3">
                     <label>CV (PDF)</label>
                     <input type="file" name="cv_file" class="form-control" accept=".pdf">
                     <?php if ($grad['cv_path']): ?>
-                        <div class="mt-2">
-                            <a href="/scholasys/assets/uploads/<?= $grad['cv_path'] ?>" target="_blank" class="btn btn-sm btn-info">View CV</a>
-                        </div>
+                        <a href="/scholasys/assets/uploads/<?= $grad['cv_path'] ?>" target="_blank" class="btn btn-sm btn-info mt-2">View CV</a>
                     <?php endif; ?>
                 </div>
                 <div class="col-12 mb-3">

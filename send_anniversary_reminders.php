@@ -7,9 +7,9 @@ use PHPMailer\PHPMailer\Exception;
 // SMTP settings – UPDATE WITH YOUR REAL CREDENTIALS
 $smtpHost = 'smtp.gmail.com';
 $smtpPort = 587;
-$smtpUser = 'your_email@gmail.com';
-$smtpPass = 'your_app_password';
-$fromEmail = 'noreply@scholasys.com';
+$smtpUser = 'grefielkent@gmail.com';
+$smtpPass = 'mkxm ttse dwtg zngr';   
+$fromEmail = 'grefielkent@gmail.com';
 $fromName = 'ScholaSys Alumni';
 
 $currentYear = date('Y');

@@ -42,7 +42,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_current'])) {
 include '../includes/header.php';
 ?>
 
-<h2>Employment Details for <?= htmlspecialchars($grad['first_name'] . ' ' . $grad['last_name']) ?></h2>
+<h2>Employment Details for <?= htmlspecialchars($grad['first_name'] . ' ' . ($grad['middle_name'] ? $grad['middle_name'][0] . '. ' : '') . $grad['last_name']) ?></h2>
+
 <form method="post" class="mb-4">
     <h3>Current Employment</h3>
     <div class="form-check mb-3">

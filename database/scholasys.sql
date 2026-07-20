@@ -31,6 +31,7 @@ CREATE TABLE graduates (
     id INT PRIMARY KEY AUTO_INCREMENT,
     student_id VARCHAR(20) UNIQUE NOT NULL,
     first_name VARCHAR(100) NOT NULL,
+    middle_name VARCHAR(100) DEFAULT NULL,
     last_name VARCHAR(100) NOT NULL,
     email VARCHAR(150) NOT NULL,
     contact_number VARCHAR(20),

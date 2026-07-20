@@ -177,7 +177,7 @@ include '../includes/header.php';
                                 <i class="fas fa-user-circle graduate-photo-placeholder"></i>
                             <?php endif; ?>
                         </td>
-                        <td><?= htmlspecialchars($g['first_name'].' '.$g['last_name']) ?></td>
+                        <td><?= htmlspecialchars($g['first_name'] . ' ' . ($g['middle_name'] ? $g['middle_name'][0] . '. ' : '') . $g['last_name']) ?></td>
                         <td><?= htmlspecialchars($g['email']) ?></td>
                         <td><?= htmlspecialchars($g['program']) ?></td>
                         <td><?= $g['graduation_year'] ?></td>

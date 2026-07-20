@@ -5,7 +5,7 @@ $isLoggedIn = isset($_SESSION['user_id']);
 $search = isset($_GET['search']) ? $_GET['search'] : '';
 $program = isset($_GET['program']) ? $_GET['program'] : '';
 
-$sql = "SELECT g.id, g.first_name, g.last_name, g.program, g.graduation_year, e.employer_name, e.job_title
+$sql = "SELECT g.id, g.first_name, g.middle_name, g.last_name, g.program, g.graduation_year, e.employer_name, e.job_title
         FROM graduates g
         LEFT JOIN employment e ON g.id = e.graduate_id AND e.is_employed = 1
         WHERE g.show_in_directory = 1";
@@ -57,7 +57,7 @@ $programs = $pdo->query("SELECT DISTINCT program FROM graduates WHERE show_in_di
                 <div class="col-md-4 mb-3">
                     <div class="card">
                         <div class="card-body">
-                            <h5 class="card-title"><?= htmlspecialchars($a['first_name'] . ' ' . $a['last_name']) ?></h5>
+                            <h5 class="card-title"><?= htmlspecialchars($a['first_name'] . ' ' . ($a['middle_name'] ? $a['middle_name'][0] . '. ' : '') . $a['last_name']) ?></h5>
                             <p class="card-text">
                                 <strong>Program:</strong> <?= htmlspecialchars($a['program']) ?><br>
                                 <strong>Year:</strong> <?= $a['graduation_year'] ?><br>

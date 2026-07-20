@@ -37,7 +37,7 @@ $industryData = $pdo->query("SELECT CASE
     ELSE 'Other' END as industry, COUNT(*) as count
     FROM employment WHERE is_employed = 1 AND employer_name IS NOT NULL GROUP BY industry")->fetchAll();
 
-// Recent graduates with larger photos
+// Recent graduates (with full name including middle initial)
 $recentGrads = $pdo->query("SELECT * FROM graduates ORDER BY id DESC LIMIT 5")->fetchAll();
 
 include '../includes/header.php';
@@ -221,7 +221,7 @@ include '../includes/header.php';
                                     <?php endif; ?>
                                 </td>
                                 <td><?= htmlspecialchars($g['student_id']) ?></td>
-                                <td><?= htmlspecialchars($g['first_name'] . ' ' . $g['last_name']) ?></td>
+                                <td><?= htmlspecialchars($g['first_name'] . ' ' . ($g['middle_name'] ? $g['middle_name'][0] . '. ' : '') . $g['last_name']) ?></td>
                                 <td><?= htmlspecialchars($g['program']) ?></td>
                                 <td><?= $g['graduation_year'] ?></td>
                                 <td>
