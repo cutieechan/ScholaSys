@@ -37,14 +37,14 @@ CREATE TABLE graduates (
     contact_number VARCHAR(20),
     program VARCHAR(100) NOT NULL,
     graduation_year YEAR NOT NULL,
+    status ENUM('active','inactive') DEFAULT 'active',
     survey_token VARCHAR(64) UNIQUE DEFAULT NULL,
     profile_image VARCHAR(255) DEFAULT NULL,
     cv_path VARCHAR(255) DEFAULT NULL,
     show_in_directory BOOLEAN DEFAULT FALSE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     INDEX idx_program (program),
-    INDEX idx_year (graduation_year),
-    INDEX idx_token (survey_token)
+    INDEX idx_year (graduation_year)
 );
 
 -- --------------------------------------------------
