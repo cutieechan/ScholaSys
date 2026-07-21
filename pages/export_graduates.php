@@ -6,9 +6,10 @@ $search = isset($_GET['search']) ? $_GET['search'] : '';
 $program = isset($_GET['program']) ? $_GET['program'] : '';
 $year = isset($_GET['year']) ? $_GET['year'] : '';
 $employment_status = isset($_GET['employment_status']) ? $_GET['employment_status'] : '';
+$status_filter = isset($_GET['status_filter']) ? $_GET['status_filter'] : '';
 
 $sql = "SELECT g.id, g.student_id, g.first_name, g.middle_name, g.last_name, g.email, g.contact_number, 
-               g.program, g.graduation_year, 
+               g.program, g.graduation_year, g.status,
                COALESCE(e.is_employed, 0) AS is_employed,
                e.employer_name, e.job_title, e.employment_type, e.monthly_salary, e.work_location
         FROM graduates g
@@ -35,6 +36,10 @@ if ($employment_status !== '') {
         $sql .= " AND (e.is_employed = 0 OR e.is_employed IS NULL)";
     }
 }
+if ($status_filter !== '') {
+    $sql .= " AND g.status = :status";
+    $params['status'] = $status_filter;
+}
 $sql .= " ORDER BY g.id DESC";
 
 $stmt = $pdo->prepare($sql);
@@ -48,7 +53,7 @@ $output = fopen('php://output', 'w');
 fprintf($output, chr(0xEF).chr(0xBB).chr(0xBF));
 fputcsv($output, [
     'ID','Student ID','First Name','Middle Name','Last Name','Email','Contact Number',
-    'Program','Graduation Year','Employed','Employer Name','Job Title',
+    'Program','Graduation Year','Status','Employed','Employer Name','Job Title',
     'Employment Type','Monthly Salary','Work Location'
 ]);
 
@@ -63,6 +68,7 @@ foreach ($graduates as $grad) {
         $grad['contact_number'],
         $grad['program'],
         $grad['graduation_year'],
+        $grad['status'],
         $grad['is_employed'] ? 'Yes' : 'No',
         $grad['employer_name'],
         $grad['job_title'],
