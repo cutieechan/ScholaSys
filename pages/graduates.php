@@ -7,6 +7,7 @@ $search = isset($_GET['search']) ? trim($_GET['search']) : '';
 $program = isset($_GET['program']) ? $_GET['program'] : '';
 $year = isset($_GET['year']) ? $_GET['year'] : '';
 $employment_status = isset($_GET['employment_status']) ? $_GET['employment_status'] : '';
+$status_filter = isset($_GET['status_filter']) ? $_GET['status_filter'] : '';
 
 $limit = 20;
 $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
@@ -48,6 +49,12 @@ if ($employment_status !== '') {
         if ($year !== '') $countParams['year'] = $year;
     }
 }
+if ($status_filter !== '') {
+    $sql .= " AND g.status = :status";
+    $countSql .= " AND status = :status";
+    $params['status'] = $status_filter;
+}
+
 if (isset($countParams)) {
     $countStmt = $pdo->prepare($countSql);
     $countStmt->execute($countParams);
@@ -132,6 +139,14 @@ include '../includes/header.php';
                     <option value="unemployed" <?= $employment_status=='unemployed'?'selected':'' ?>>Unemployed</option>
                 </select>
             </div>
+            <div class="col-md-2">
+                <label>Status</label>
+                <select name="status_filter" class="form-select">
+                    <option value="">All</option>
+                    <option value="active" <?= $status_filter=='active'?'selected':'' ?>>Active</option>
+                    <option value="inactive" <?= $status_filter=='inactive'?'selected':'' ?>>Inactive</option>
+                </select>
+            </div>
             <div class="col-md-3 d-flex align-items-end">
                 <button type="submit" class="btn btn-primary me-2">Apply</button>
                 <a href="graduates.php" class="btn btn-secondary me-2">Reset</a>
@@ -159,13 +174,14 @@ include '../includes/header.php';
                         <th>Email</th>
                         <th>Program</th>
                         <th>Year</th>
+                        <th>Status</th>
                         <th>Employed</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
                     <?php if (count($graduates)==0): ?>
-                        <tr><td colspan="9">No graduates found</td></tr>
+                        <tr><td colspan="10">No graduates found</td></tr>
                     <?php else: foreach ($graduates as $g): ?>
                     <tr>
                         <td><?= $g['id'] ?></td>
@@ -181,6 +197,13 @@ include '../includes/header.php';
                         <td><?= htmlspecialchars($g['email']) ?></td>
                         <td><?= htmlspecialchars($g['program']) ?></td>
                         <td><?= $g['graduation_year'] ?></td>
+                        <td>
+                            <?php if ($g['status'] == 'active'): ?>
+                                <span class="badge bg-success">Active</span>
+                            <?php else: ?>
+                                <span class="badge bg-secondary">Inactive</span>
+                            <?php endif; ?>
+                        </td>
                         <td><?= isset($g['is_employed']) && $g['is_employed'] ? '<span class="badge bg-success">Employed</span>' : '<span class="badge bg-secondary">Unemployed</span>' ?></td>
                         <td>
                             <a href="edit_graduate.php?id=<?= $g['id'] ?>" class="btn btn-sm btn-warning"><i class="fas fa-edit"></i> Edit</a>
