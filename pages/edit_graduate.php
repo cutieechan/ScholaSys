@@ -24,6 +24,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $contact = trim($_POST['contact_number']);
     $program = trim($_POST['program']);
     $year = (int)$_POST['graduation_year'];
+    $status = $_POST['status'];
     $show_dir = isset($_POST['show_in_directory']) ? 1 : 0;
 
     $checkStmt = $pdo->prepare("SELECT id FROM graduates WHERE student_id = ? AND id != ?");
@@ -53,8 +54,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
         }
 
-        $update = $pdo->prepare("UPDATE graduates SET student_id=?, first_name=?, middle_name=?, last_name=?, email=?, contact_number=?, program=?, graduation_year=?, profile_image=?, cv_path=?, show_in_directory=? WHERE id=?");
-        if ($update->execute([$student_id, $first_name, $middle_name, $last_name, $email, $contact, $program, $year, $profile_image, $cv_path, $show_dir, $id])) {
+        $update = $pdo->prepare("UPDATE graduates SET student_id=?, first_name=?, middle_name=?, last_name=?, email=?, contact_number=?, program=?, graduation_year=?, status=?, profile_image=?, cv_path=?, show_in_directory=? WHERE id=?");
+        if ($update->execute([$student_id, $first_name, $middle_name, $last_name, $email, $contact, $program, $year, $status, $profile_image, $cv_path, $show_dir, $id])) {
             $success = "Graduate updated successfully!";
             $stmt = $pdo->prepare("SELECT * FROM graduates WHERE id = ?");
             $stmt->execute([$id]);
@@ -105,13 +106,20 @@ include '../includes/header.php';
                     <label>Contact Number</label>
                     <input type="text" name="contact_number" class="form-control" value="<?= htmlspecialchars($grad['contact_number']) ?>">
                 </div>
-                <div class="col-md-6 mb-3">
+                <div class="col-md-4 mb-3">
                     <label>Program</label>
                     <input type="text" name="program" class="form-control" value="<?= htmlspecialchars($grad['program']) ?>" required>
                 </div>
-                <div class="col-md-6 mb-3">
+                <div class="col-md-4 mb-3">
                     <label>Graduation Year</label>
                     <input type="number" name="graduation_year" class="form-control" value="<?= $grad['graduation_year'] ?>" required>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label>Status</label>
+                    <select name="status" class="form-select">
+                        <option value="active" <?= $grad['status'] == 'active' ? 'selected' : '' ?>>Active</option>
+                        <option value="inactive" <?= $grad['status'] == 'inactive' ? 'selected' : '' ?>>Inactive</option>
+                    </select>
                 </div>
                 <div class="col-md-6 mb-3">
                     <label>Profile Picture</label>
